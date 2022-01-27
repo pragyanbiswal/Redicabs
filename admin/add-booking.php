@@ -226,6 +226,22 @@ foreach($results as $result)
 <option value="<?php echo htmlentities($result->id);?>"><?php echo htmlentities($result->BrandName);?></option>
 <?php }} ?>
 
+<label class="col-sm-1 control-label">Select Brand<span style="color:red">*</span></label>
+<div class="col-sm-3">
+<select class="selectpicker" name="brandname" required>
+<option value=""> Select </option>
+<?php $ret="select id,BrandName from tblbrands";
+$query= $dbh -> prepare($ret);
+//$query->bindParam(':id',$id, PDO::PARAM_STR);
+$query-> execute();
+$results = $query -> fetchAll(PDO::FETCH_OBJ);
+if($query -> rowCount() > 0)
+{
+foreach($results as $result)
+{
+?>
+<option value="<?php echo htmlentities($result->id);?>"><?php echo htmlentities($result->BrandName);?></option>
+<?php }} ?>
 <!-- <div class="hr-dashed"></div>
 <div class="form-group">
 <label class="col-sm-1 control-label">Search Vehicle<span style="color:red">*</span></label>

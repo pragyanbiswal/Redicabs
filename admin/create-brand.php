@@ -7,24 +7,17 @@ if(strlen($_SESSION['alogin'])==0)
 header('location:index.php');
 }
 else{
-// Code for change password	
-if(isset($_POST['submit']))
-{
-$brand=$_POST['brand'];
-$sql="INSERT INTO  tblbrands(BrandName) VALUES(:brand)";
-$query = $dbh->prepare($sql);
-$query->bindParam(':brand',$brand,PDO::PARAM_STR);
-$query->execute();
-$lastInsertId = $dbh->lastInsertId();
-if($lastInsertId)
-{
-$msg="Brand Created successfully";
-}
-else 
-{
-$error="Something went wrong. Please try again";
-}
+	if(isset($_POST['submit']))
+ {
+  extract($_POST); 
 
+  $sql = "insert into tblbrands(BrandName)values('$brand')";
+  $res=mysqli_query($conn, $sql);
+  if($res){
+  $msg="<b class='succWrap'>Brand Created Successfully</b>";
+  } else {
+  	$msg="<b class='errorWrap'>Brand Created Failed</b>";
+  }    
 }
 ?>
 
@@ -67,9 +60,10 @@ $error="Something went wrong. Please try again";
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
 .succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
+    padding-top: 10px;
     background: #fff;
+    margin-left:50%;
+    margin-top:10px;
     border-left: 4px solid #5cb85c;
     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
@@ -96,11 +90,13 @@ $error="Something went wrong. Please try again";
 								<div class="panel panel-default">
 									<div class="panel-heading">Create Brand</div>
 									<div class="panel-body">
+                                         <?php echo $msg."<br><br>"; ?>
+
 										<form method="post" name="chngpwd" class="form-horizontal" onSubmit="return valid();">
 										
 											
-  	        	  <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
-				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
+  	        	 
+				
 											<div class="form-group">
 												<label class="col-sm-4 control-label">Brand Name</label>
 												<div class="col-sm-8">
@@ -120,7 +116,7 @@ $error="Something went wrong. Please try again";
 											</div>
 
 										</form>
-
+                                         
 									</div>
 								</div>
 							</div>

@@ -10,16 +10,10 @@ else{
 if(isset($_GET['del']))
 {
 $id=$_GET['del'];
-$sql = "delete from tblbrands  WHERE id=:id";
-$query = $dbh->prepare($sql);
-$query -> bindParam(':id',$id, PDO::PARAM_STR);
-$query -> execute();
+$query = "delete from tblbrands  WHERE id=$id";
+$query_run = mysqli_query($conn, $query);
 $msg="Page data updated  successfully";
-
 }
-
-
-
  ?>
 
 <!doctype html>
@@ -114,23 +108,28 @@ $msg="Page data updated  successfully";
 										</tr>
 									</tfoot>
 									<tbody>
-
-									<?php $sql = "SELECT * from  tblbrands ";
-$query = $dbh -> prepare($sql);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-$cnt=1;
-if($query->rowCount() > 0)
-{
-foreach($results as $result)
-{				?>	
+<?php
+  extract($_POST); 
+                $query = "SELECT * FROM tblbrands";
+                $query_run = mysqli_query($conn, $query);
+                   $i = 1;
+                   if(mysqli_num_rows($query_run) > 0)        
+                        {
+                            while($row = mysqli_fetch_array($query_run))
+                            {
+                        ?>
 										<tr>
 											<td><?php echo htmlentities($cnt);?></td>
+											 <td><?php  echo $row['BrandName'];  ?></td>
+                                			<td><?php  echo $row['CreationDate'];  ?></td>
+                                			<td><?php  echo $row['UpdationDate']; ?></td> 
+                                 		  
+											<!-- <td><?php echo htmlentities($cnt);?></td>
 											<td><?php echo htmlentities($result->BrandName);?></td>
 											<td><?php echo htmlentities($result->CreationDate);?></td>
-											<td><?php echo htmlentities($result->UpdationDate);?></td>
-<td><a href="edit-brand.php?id=<?php echo $result->id;?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;
-<a href="manage-brands.php?del=<?php echo $result->id;?>" onclick="return confirm('Do you want to delete');"><i class="fa fa-close"></i></a></td>
+											<td><?php echo htmlentities($result->UpdationDate);?></td>  -->
+<td><a href="edit-brand.php?id=<?php echo $row->id;?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;
+<a href="manage-brands.php?del=<?php echo $row->id;?>" onclick="return confirm('Do you want to delete');"><i class="fa fa-close"></i></a></td>
 										</tr>
 										<?php $cnt=$cnt+1; }} ?>
 										

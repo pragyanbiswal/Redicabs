@@ -6,28 +6,43 @@ if(strlen($_SESSION['alogin'])==0)
 	{	
 header('location:index.php');
 }
-else{
-// Code for change password	
-if(isset($_POST['submit']))
-{
-$name=$_POST['name'];
-$number=$_POST['number'];
-$sql="INSERT INTO  tbldriver(name,number) VALUES(:name,:number)";
-$query = $dbh->prepare($sql);
-$query->bindParam(':name',$name,PDO::PARAM_STR);
-$query->bindParam(':number',$number,PDO::PARAM_STR);
-$query->execute();
-$lastInsertId = $dbh->lastInsertId();
-if($lastInsertId)
-{
-$msg="Driver added successfully";
-}
-else 
-{
-$error="Something went wrong. Please try again";
-}
+else{ 
+ if(isset($_POST['submit']))
+ {
+  extract($_POST); 
 
+  $sql = "insert into tbldriver(name,number)values('$name','$number')";
+
+ if (mysqli_query($conn, $sql)) {
+        $msg="Driver added successfully"; 
+         
+      } else {
+         //echo "Error: " . $sql . ":-" . mysqli_error($conn);
+      	 $error="Something went wrong. Please try again";
+     }
+      mysqli_close($conn);
+echo"success";
 }
+// if(isset($_POST['submit']))
+// {
+// $name=$_POST['name'];
+// $number=$_POST['number'];
+// $sql="INSERT INTO  tbldriver(name,number) VALUES(:name,:number)";
+// $query = $dbh->prepare($sql);
+// $query->bindParam(':name',$name,PDO::PARAM_STR);
+// $query->bindParam(':number',$number,PDO::PARAM_STR);
+// $query->execute();
+// $lastInsertId = $dbh->lastInsertId();
+// if($lastInsertId)
+// {
+// $msg="Driver added successfully";
+// }
+// else 
+// {
+// $error="Something went wrong. Please try again";
+// }
+
+// }
 ?>
 
 <!doctype html>
