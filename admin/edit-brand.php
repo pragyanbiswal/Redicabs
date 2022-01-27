@@ -7,19 +7,18 @@ if(strlen($_SESSION['alogin'])==0)
 header('location:index.php');
 }
 else{
-// Code for change password	
+
 if(isset($_POST['submit']))
 {
-$brand=$_POST['brand'];
-$id=$_GET['id'];
-$sql="update  tblbrands set BrandName=:brand where id=:id";
-$query = $dbh->prepare($sql);
-$query->bindParam(':brand',$brand,PDO::PARAM_STR);
-$query->bindParam(':id',$id,PDO::PARAM_STR);
-$query->execute();
-$lastInsertId = $dbh->lastInsertId();
-
-$msg="Brand Update successfully";
+     $id = $_GET['id'];
+      $brand=$_POST['brand'];
+        $query = "UPDATE  tblbrands SET BrandName='$brand' WHERE id='$id' ";
+     $query_run = mysqli_query($conn, $query);
+ if($query_run){
+ 	header("location:manage-brands.php");
+ }else{
+ 	$msg="updated failed";
+ }
 
 }
 ?>
@@ -92,35 +91,24 @@ $msg="Brand Update successfully";
 								<div class="panel panel-default">
 									<div class="panel-heading">Update Brand</div>
 									<div class="panel-body">
+										<?php echo $msg."<br><br>"; ?>
 										<form method="post" name="chngpwd" class="form-horizontal" onSubmit="return valid();">
-										
-											
-  	        	  <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
-				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
-
 <?php	
-$id=$_GET['id'];
-$ret="select * from tblbrands where id=:id";
-$query= $dbh -> prepare($ret);
-$query->bindParam(':id',$id, PDO::PARAM_STR);
-$query-> execute();
-$results = $query -> fetchAll(PDO::FETCH_OBJ);
-$cnt=1;
-if($query -> rowCount() > 0)
-{
-foreach($results as $result)
-{
+$id = $_GET['id'];
+$select="SELECT * FROM tblbrands WHERE id='$id'";
+$result=mysqli_query($conn, $select);
+$row = mysqli_fetch_assoc($result);
 ?>
-
+                                                 <input type="hidden" name="id" value="<?php echo $row['id']?>">
 											<div class="form-group">
 												<label class="col-sm-4 control-label">Brand Name</label>
 												<div class="col-sm-8">
-													<input type="text" class="form-control" value="<?php echo htmlentities($result->BrandName);?>" name="brand" id="brand" required>
+													<input type="text" class="form-control" value="<?php echo $row['BrandName'];?>" name="brand" id="brand" required>
 												</div>
 											</div>
 											<div class="hr-dashed"></div>
 											
-										<?php }} ?>
+										<?php ?>
 								
 											
 											<div class="form-group">
